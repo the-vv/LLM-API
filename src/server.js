@@ -6,6 +6,7 @@ const database = require('./database');
 const { authenticateApiKey } = require('./middleware/auth');
 const apiRoutes = require('./routes/api');
 const { generateApiDocs } = require('./utils/apiDocs');
+const { logger, requestLogger } = require('./utils/logger');
 
 const app = express();
 const PORT = process.env.PORT || 8100;
@@ -20,6 +21,7 @@ if (!fs.existsSync(dataDir)) {
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(requestLogger); // Add request logging middleware
 
 // Health check endpoint (no auth required)
 app.get('/health', (req, res) => {
@@ -67,7 +69,13 @@ app.use('*', (req, res) => {
 
 // Error handler
 app.use((error, req, res, next) => {
-  console.error('Global error handler:', error);
+  logger.error('Global error handler', { 
+    error: error.message, 
+    stack: error.stack,
+    url: req.url,
+    method: req.method,
+    ip: req.ip
+  });
   res.status(500).json({
     error: 'Internal Server Error',
     message: process.env.NODE_ENV === 'development' ? error.message : 'Something went wrong'
@@ -80,15 +88,20 @@ const startServer = async () => {
     await database.connect();
     
     app.listen(PORT, () => {
-      console.log(`🚀 Ollama REST API server running on port ${PORT}`);
+      const startupMessage = `🚀 Ollama REST API server running on port ${PORT}`;
+      console.log(startupMessage);
+      logger.info('Server started', { port: PORT, environment: process.env.NODE_ENV });
+      
       console.log(`📋 Health check: http://localhost:${PORT}/health`);
       console.log(`📖 API info: http://localhost:${PORT}/api/info`);
-      console.log(`� API docs: http://localhost:${PORT}/docs`);
-      console.log(`�🔑 Generate API key: npm run genkey`);
+      console.log(`📚 API docs: http://localhost:${PORT}/docs`);
+      console.log(`🔑 Generate API key: npm run genkey`);
       console.log(`🌍 Ollama URL: ${process.env.OLLAMA_URL}`);
       console.log(`🤖 Default model: ${process.env.OLLAMA_MODEL}`);
+      console.log(`📝 Logs directory: ./logs/`);
     });
   } catch (error) {
+    logger.error('Failed to start server', { error: error.message, stack: error.stack });
     console.error('Failed to start server:', error);
     process.exit(1);
   }
@@ -97,12 +110,14 @@ const startServer = async () => {
 // Graceful shutdown
 process.on('SIGINT', () => {
   console.log('\n🛑 Shutting down server...');
+  logger.info('Server shutdown initiated', { signal: 'SIGINT' });
   database.close();
   process.exit(0);
 });
 
 process.on('SIGTERM', () => {
   console.log('\n🛑 Shutting down server...');
+  logger.info('Server shutdown initiated', { signal: 'SIGTERM' });
   database.close();
   process.exit(0);
 });

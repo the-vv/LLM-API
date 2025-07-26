@@ -6,6 +6,7 @@ yarn-error.log*
 .DS_Store
 *.sqlite
 *.db
+logs/
 .env
 .env.local
 .env.production
