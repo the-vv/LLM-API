@@ -64,6 +64,15 @@ GET /health
 GET /api/info
 ```
 
+### API Documentation (No Auth Required)
+
+```
+GET /docs
+GET /api/docs
+```
+
+View the complete interactive API documentation in your browser at `http://localhost:8100/docs`
+
 ### Generate Completion
 
 ```

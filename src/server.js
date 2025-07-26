@@ -5,6 +5,7 @@ const path = require('path');
 const database = require('./database');
 const { authenticateApiKey } = require('./middleware/auth');
 const apiRoutes = require('./routes/api');
+const { generateApiDocs } = require('./utils/apiDocs');
 
 const app = express();
 const PORT = process.env.PORT || 8100;
@@ -44,6 +45,15 @@ app.get('/api/info', (req, res) => {
   });
 });
 
+// API documentation endpoint (no auth required)
+app.get('/docs', (req, res) => {
+  res.send(generateApiDocs());
+});
+
+app.get('/api/docs', (req, res) => {
+  res.send(generateApiDocs());
+});
+
 // Protected API routes
 app.use('/api/v1', authenticateApiKey, apiRoutes);
 
@@ -73,7 +83,8 @@ const startServer = async () => {
       console.log(`🚀 Ollama REST API server running on port ${PORT}`);
       console.log(`📋 Health check: http://localhost:${PORT}/health`);
       console.log(`📖 API info: http://localhost:${PORT}/api/info`);
-      console.log(`🔑 Generate API key: npm run genkey`);
+      console.log(`� API docs: http://localhost:${PORT}/docs`);
+      console.log(`�🔑 Generate API key: npm run genkey`);
       console.log(`🌍 Ollama URL: ${process.env.OLLAMA_URL}`);
       console.log(`🤖 Default model: ${process.env.OLLAMA_MODEL}`);
     });
