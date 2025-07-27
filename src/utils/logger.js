@@ -15,7 +15,7 @@ const dailyRotateFileTransport = new DailyRotateFile({
   datePattern: 'YYYY-MM-DD',
   zippedArchive: true,
   maxSize: '20m',
-  maxFiles: '90d', // Keep logs for 30 days
+  maxFiles: '90d', // Keep logs for 90 days
   format: winston.format.combine(
     winston.format.timestamp({
       format: 'YYYY-MM-DD HH:mm:ss'

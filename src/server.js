@@ -5,11 +5,22 @@ const path = require('path');
 const database = require('./database');
 const { authenticateApiKey } = require('./middleware/auth');
 const apiRoutes = require('./routes/api');
+const utilsRoutes = require('./routes/utils');
 const { generateApiDocs } = require('./utils/apiDocs');
 const { logger, requestLogger } = require('./utils/logger');
+const rateLimit = require('express-rate-limit');
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 mins
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: 'Too many requests, please try again later.',
+});
+
 
 const app = express();
 const PORT = process.env.PORT || 8100;
+
+app.set('trust proxy', true);
 
 // Create data directory if it doesn't exist
 const fs = require('fs');
@@ -34,6 +45,7 @@ if (corsOrigins) {
 }
 app.use(express.json());
 app.use(requestLogger); // Add request logging middleware
+app.use(limiter);
 
 // Health check endpoint (no auth required)
 app.get('/health', (req, res) => {
@@ -54,7 +66,11 @@ app.get('/api/info', (req, res) => {
       chat: '/api/v1/chat',
       completions: '/api/v1/completions'
     },
-    authentication: 'API Key required in X-API-Key header',
+    utils: {
+      'weekday-quote': '/utils/weekday-quote',
+      'utils-health': '/utils/health'
+    },
+    authentication: 'API Key required in X-API-Key header for /api/v1/* endpoints',
     streaming: 'Supported via stream parameter'
   });
 });
@@ -67,6 +83,9 @@ app.get('/docs', (req, res) => {
 app.get('/api/docs', (req, res) => {
   res.send(generateApiDocs());
 });
+
+// Utils routes (no auth required)
+app.use('/utils', utilsRoutes);
 
 // Protected API routes
 app.use('/api/v1', authenticateApiKey, apiRoutes);
@@ -107,7 +126,8 @@ const startServer = async () => {
       console.log(`📋 Health check: http://localhost:${PORT}/health`);
       console.log(`📖 API info: http://localhost:${PORT}/api/info`);
       console.log(`📚 API docs: http://localhost:${PORT}/docs`);
-      console.log(`🔑 Generate API key: npm run genkey`);
+      console.log(`�️  Utils: http://localhost:${PORT}/utils/weekday-quote`);
+      console.log(`�🔑 Generate API key: npm run genkey`);
       console.log(`🌍 Ollama URL: ${process.env.OLLAMA_URL}`);
       console.log(`🤖 Default model: ${process.env.OLLAMA_MODEL}`);
       console.log(`📝 Logs directory: ./logs/`);
