@@ -12,8 +12,10 @@ const quoteCache = {
 
 // Helper function to get current weekday
 const getCurrentWeekday = () => {
-  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  return days[new Date().getDay()];
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const indiaTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' });
+    const date = new Date(indiaTime);
+    return days[date.getDay()];
 };
 
 // Helper function to check if cache is valid (same weekday and within 24 hours)
@@ -34,7 +36,7 @@ const isCacheValid = () => {
 };
 
 // Weekday quotes endpoint
-router.get('/weekday-quote', async (req, res) => {
+router.get('/weekday-quote-in', async (req, res) => {
   try {
     const currentWeekday = getCurrentWeekday();
     
@@ -61,14 +63,18 @@ router.get('/weekday-quote', async (req, res) => {
     Today's weekday is: ${currentWeekday}
 
     Now give me the message. 
-    Only message nothing else. otherwise, system will break. Also make it short like only around 30 chars long`;
+    Only message, no surrounding quotes, only plain text and emojis if required. nothing else. otherwise, system will break. Also make it short like only around 30 chars long`;
 
     logger.info('Generating new weekday quote', { weekday: currentWeekday });
     
     const response = await ollamaService.generateCompletion(prompt);
     
     if (response.data && response.data.response) {
-      const quote = response.data.response.trim();
+      let quote = response.data.response.trim();
+
+      try {
+        quote = JSON.parse(quote) // for removing surrounding quotes
+      } catch {}
       
       // Update cache
       quoteCache.quote = quote;

@@ -67,7 +67,7 @@ app.get('/api/info', (req, res) => {
       completions: '/api/v1/completions'
     },
     utils: {
-      'weekday-quote': '/utils/weekday-quote',
+      'weekday-quote-in': '/utils/weekday-quote-in',
       'utils-health': '/utils/health'
     },
     authentication: 'API Key required in X-API-Key header for /api/v1/* endpoints',
