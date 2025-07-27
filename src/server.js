@@ -18,8 +18,20 @@ if (!fs.existsSync(dataDir)) {
   fs.mkdirSync(dataDir, { recursive: true });
 }
 
+// Configure CORS origins from environment variable
+const corsOrigins = process.env.CORS_ORIGINS 
+  ? process.env.CORS_ORIGINS.split(',').map(origin => origin.trim())
+  : null;
+
 // Middleware
-app.use(cors());
+if (corsOrigins) {
+  const corsOptions = {
+    origin: corsOrigins,
+    credentials: true,
+    optionsSuccessStatus: 200
+  };
+  app.use(cors(corsOptions));
+}
 app.use(express.json());
 app.use(requestLogger); // Add request logging middleware
 
