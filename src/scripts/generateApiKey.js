@@ -2,6 +2,7 @@ require('dotenv').config();
 const { v4: uuidv4 } = require('uuid');
 const database = require('../database');
 const readline = require('readline');
+const camelcase = require('lodash.camelcase');
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -38,8 +39,8 @@ const generateApiKey = async (labelArg = null) => {
     }
     
     // Generate API key
-    const apiKey = `ollama_${uuidv4().replace(/-/g, '')}`;
-    
+    const apiKey = `${camelcase(label)}_${uuidv4().replace(/-/g, '')}`;
+
     // Store in database
     const result = await database.insertApiKey(apiKey, label);
     
@@ -48,12 +49,6 @@ const generateApiKey = async (labelArg = null) => {
     console.log(`🏷️  Label: ${label}`);
     console.log(`🔑 API Key: ${apiKey}`);
     console.log(`📅 Created: ${new Date().toISOString()}`);
-    console.log('');
-    console.log('Usage:');
-    console.log(`curl -H "X-API-Key: ${apiKey}" \\`);
-    console.log(`     -H "Content-Type: application/json" \\`);
-    console.log(`     -d '{"prompt": "Hello, how are you?"}' \\`);
-    console.log(`     http://localhost:${process.env.PORT || 8100}/api/v1/generate`);
     console.log('');
     console.log('⚠️  Important: Store this API key securely. It will not be shown again.');
     
