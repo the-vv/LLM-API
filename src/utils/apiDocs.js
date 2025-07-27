@@ -174,7 +174,7 @@ const generateApiDocs = () => {
             <table class="params-table">
                 <tr>
                     <th>Base URL</th>
-                    <td><code>http://localhost:8100</code></td>
+                    <td><code>https://ai-api.thevv.me</code></td>
                 </tr>
                 <tr>
                     <th>Content-Type</th>
@@ -205,7 +205,7 @@ const generateApiDocs = () => {
 }</div>
                     <div class="try-it">
                         <h4>Try it:</h4>
-                        <div class="code-block">curl http://localhost:8100/health</div>
+                        <div class="code-block">curl https://ai-api.thevv.me/health</div>
                     </div>
                 </div>
             </div>
@@ -281,14 +281,14 @@ const generateApiDocs = () => {
                         <div class="code-block">curl -H "X-API-Key: your_api_key" \\
      -H "Content-Type: application/json" \\
      -d '{"prompt": "Hello, how are you?"}' \\
-     http://localhost:8100/api/v1/generate</div>
+     https://ai-api.thevv.me/api/v1/generate</div>
                     </div>
 
                     <h4>Streaming Example:</h4>
                     <div class="code-block">curl -H "X-API-Key: your_api_key" \\
      -H "Content-Type: application/json" \\
      -d '{"prompt": "Tell me a story", "stream": true}' \\
-     http://localhost:8100/api/v1/generate</div>
+     https://ai-api.thevv.me/api/v1/generate</div>
                 </div>
             </div>
 
@@ -345,7 +345,7 @@ const generateApiDocs = () => {
                         <div class="code-block">curl -H "X-API-Key: your_api_key" \\
      -H "Content-Type: application/json" \\
      -d '{"messages": [{"role": "user", "content": "Hello!"}]}' \\
-     http://localhost:8100/api/v1/chat</div>
+     https://ai-api.thevv.me/api/v1/chat</div>
                     </div>
                 </div>
             </div>
@@ -432,7 +432,7 @@ const generateApiDocs = () => {
                         <div class="code-block">curl -H "X-API-Key: your_api_key" \\
      -H "Content-Type: application/json" \\
      -d '{"prompt": "The future of AI is"}' \\
-     http://localhost:8100/api/v1/completions</div>
+     https://ai-api.thevv.me/api/v1/completions</div>
                     </div>
                 </div>
             </div>
