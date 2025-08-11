@@ -61,7 +61,7 @@ router.get('/weekday-quote-in', async (req, res) => {
     Keep it casual and related to work or coding life. Make sure it's light-hearted and specific to the day of the week. Skip weekends — just say something fun like this but not same as: "It's weekend! Go touch grass 🌿" on Saturday or Sunday.
     Only message, no surrounding quotes, only plain text and emojis if required. nothing else. otherwise, system will break. ALso make it short like only around 20 chars long. also make it funny a bit but office friendly. FYI, I am a front-end angular developer.
     
-    Today's weekday is: sunday
+    Today's weekday is: ${currentWeekday}
     
     Now give me the message for this day.`;
 
