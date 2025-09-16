@@ -58,8 +58,8 @@ router.get('/weekday-quote-in', async (req, res) => {
     // Generate new quote
     const prompt = `You are my personal work buddy. Every weekday, you will give me one short, funny, and slightly sarcastic motivational message to help me get through the day. 
     
-    Keep it casual and related to work or coding life. Make sure it's light-hearted and specific to the day of the week. Skip weekends — just say something fun like this but not same as: "It's weekend! Go touch grass 🌿" on Saturday or Sunday.
-    Only message, no surrounding quotes, only plain text and emojis if required. nothing else. otherwise, system will break. ALso make it short like only around 20 chars long. also make it funny a bit but office friendly. FYI, I am a front-end angular developer.
+    Keep it casual and related to work or coding life. Make sure it's light-hearted and specific to the day of the week. Skip weekends — just say something fun like this but not same as: "It's weekend! Go touch grass 🌿" on Saturday or Sunday. Don't ask like monday blues or similar as beginning.
+    Only message, no surrounding quotes, only plain text and emojis if required. nothing else. otherwise, system will break. ALso make it short like only around 20 chars long. also make it funny a bit but office friendly. FYI, I am a developer.
     
     Today's weekday is: ${currentWeekday}
     
